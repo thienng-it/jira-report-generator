@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { TicketGenerator } from './components/TicketGenerator';
 import { VerifiedCommentGenerator } from './components/VerifiedCommentGenerator';
-import { FileText, ClipboardCheck, Moon, Sun, Github } from 'lucide-react';
+import { FileText, ClipboardCheck, Moon, Sun } from 'lucide-react';
 import { Button } from './components/ui/button';
 
 function App() {
@@ -49,9 +49,6 @@ function App() {
               <Button variant="ghost" size="icon" onClick={toggleDarkMode}>
                 {darkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
               </Button>
-              <a href="https://github.com" target="_blank" rel="noreferrer" className="text-slate-500 hover:text-slate-900 dark:hover:text-slate-50">
-                <Github className="h-5 w-5" />
-              </a>
             </div>
           </div>
         </aside>
@@ -60,7 +57,8 @@ function App() {
         <main className="flex-1 overflow-auto p-8">
           <div className="max-w-3xl mx-auto space-y-8">
             <div className="space-y-2">
-              <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-50">
+              <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-50 flex items-center gap-3">
+                {activeView === 'ticket' ? <FileText className="h-8 w-8 text-blue-600" /> : <ClipboardCheck className="h-8 w-8 text-green-600" />}
                 {activeView === 'ticket' ? 'Ticket Templates' : 'Verified Comment Generator'}
               </h2>
               <p className="text-slate-500 dark:text-slate-400">
@@ -71,6 +69,10 @@ function App() {
             </div>
 
             {activeView === 'ticket' ? <TicketGenerator /> : <VerifiedCommentGenerator />}
+
+            <footer className="pt-8 text-center text-sm text-slate-500 dark:text-slate-400">
+              <p>&copy; {new Date().getFullYear()} Jira Report Generator. Built for QA Excellence.</p>
+            </footer>
           </div>
         </main>
       </div>
