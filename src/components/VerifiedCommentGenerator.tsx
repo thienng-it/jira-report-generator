@@ -28,6 +28,7 @@ export function VerifiedCommentGenerator() {
         const savedData = localStorage.getItem('jira-verified-comment-presets');
         if (savedData) {
             const parsed = JSON.parse(savedData);
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setFields(prev => ({
                 ...prev,
                 environment: parsed.environment || '',
@@ -183,7 +184,7 @@ ${fields.evidence}
                     <select
                         className="flex h-10 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-800 dark:bg-slate-950 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300"
                         value={fields.status}
-                        onChange={(e) => setFields({ ...fields, status: e.target.value as any })}
+                        onChange={(e) => setFields({ ...fields, status: e.target.value })}
                     >
                         <option value="Pass">Pass</option>
                         <option value="Fail">Fail</option>
