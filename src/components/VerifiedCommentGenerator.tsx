@@ -5,7 +5,8 @@ import { Textarea } from './ui/textarea';
 import { Label } from './ui/label';
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from './ui/card';
-import { Copy, Download, Save } from 'lucide-react';
+import { Download, Save } from 'lucide-react';
+import CopyWithToast from "./ui/copywithtoast.tsx";
 
 export function VerifiedCommentGenerator() {
     const [fields, setFields] = useState<VerifiedCommentFields>({
@@ -80,10 +81,6 @@ ${fields.evidence}
             case 'Skipped': return 'gray';
             default: return 'black';
         }
-    };
-
-    const copyToClipboard = () => {
-        navigator.clipboard.writeText(generateOutput());
     };
 
     const downloadFile = () => {
@@ -215,9 +212,9 @@ ${fields.evidence}
                 </div>
 
                 <div className="flex space-x-2 pt-4 border-t border-slate-100 dark:border-slate-800">
-                    <Button onClick={copyToClipboard} className="flex-1">
-                        <Copy className="mr-2 h-4 w-4" /> Copy to Clipboard
-                    </Button>
+                    <div className="flex-1">
+                        <CopyWithToast text={generateOutput()}/>
+                    </div>
                     <Button onClick={downloadFile} variant="outline" className="flex-1">
                         <Download className="mr-2 h-4 w-4" /> Download
                     </Button>

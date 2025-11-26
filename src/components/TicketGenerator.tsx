@@ -5,7 +5,9 @@ import { Textarea } from './ui/textarea';
 import { Label } from './ui/label';
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from './ui/card';
-import { Copy, Download } from 'lucide-react';
+import { Download } from 'lucide-react';
+import CopyWithToast from '../components/ui/copywithtoast.tsx';
+import {Col, Form, Row} from "react-bootstrap";
 
 export function TicketGenerator() {
     const [activeTab, setActiveTab] = useState<TicketType>('bug');
@@ -88,11 +90,6 @@ ${epicFields.scope}`;
         }
     };
 
-    const copyToClipboard = () => {
-        navigator.clipboard.writeText(generateOutput());
-        // Could add toast notification here
-    };
-
     const downloadFile = () => {
         const element = document.createElement("a");
         const file = new Blob([generateOutput()], { type: 'text/plain' });
@@ -124,47 +121,68 @@ ${epicFields.scope}`;
             <CardContent className="space-y-4">
                 {activeTab === 'bug' && (
                     <>
-                        <div className="space-y-2">
-                            <Label>Summary</Label>
-                            <Input
-                                value={bugFields.summary}
-                                onChange={(e) => setBugFields({ ...bugFields, summary: e.target.value })}
-                                placeholder="Brief description of the bug"
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <Label>Steps to Reproduce</Label>
-                            <Textarea
-                                value={bugFields.stepsToReproduce}
-                                onChange={(e) => setBugFields({ ...bugFields, stepsToReproduce: e.target.value })}
-                                placeholder="1. Go to... 2. Click on..."
-                                className="h-32"
-                            />
-                        </div>
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                                <Label>Expected Result</Label>
-                                <Textarea
-                                    value={bugFields.expectedResult}
-                                    onChange={(e) => setBugFields({ ...bugFields, expectedResult: e.target.value })}
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <Label>Actual Result</Label>
-                                <Textarea
-                                    value={bugFields.actualResult}
-                                    onChange={(e) => setBugFields({ ...bugFields, actualResult: e.target.value })}
-                                />
-                            </div>
-                        </div>
-                        <div className="space-y-2">
-                            <Label>Environment</Label>
-                            <Input
-                                value={bugFields.environment}
-                                onChange={(e) => setBugFields({ ...bugFields, environment: e.target.value })}
-                                placeholder="Browser, OS, Device, etc."
-                            />
-                        </div>
+                        <Form>
+                            <Form.Group as={Row} className="mb-3">
+                                <Form.Label column sm="2">
+                                    Summary
+                                </Form.Label>
+                                <Col sm="10">
+                                    <Form.Control id="summary" value={bugFields.summary} onChange={e => setBugFields({ ...bugFields, summary: e.target.value})}></Form.Control>
+                                </Col>
+                            </Form.Group>
+
+                            <Form.Group as={Row} className="mb-3">
+                                <Form.Label column sm="2"><b>Priority</b></Form.Label>
+                                <Col sm="10">
+                                    <Form.Select
+                                        value={bugFields.priority}
+                                        onChange={(e) => setBugFields({ ...bugFields, priority: e.target.value })}
+                                    >
+                                        <option value="blocker">Blocker</option>
+                                        <option value="critical">Critical</option>
+                                        <option value="major">Major</option>
+                                        <option value="minor">Minor</option>
+                                    </Form.Select>
+                                </Col>
+                            </Form.Group>
+
+                            <Form.Group as={Row} className="mb-3">
+                                <Form.Label column sm="2">
+                                    Steps to Reproduce
+                                </Form.Label>
+                                <Col sm="10">
+                                    <Form.Control as="textarea" id="steps" placeholder='1. Go to...
+2. Click on...' value={bugFields.stepsToReproduce} onChange={e => setBugFields({ ...bugFields, stepsToReproduce: e.target.value})}></Form.Control>
+                                </Col>
+                            </Form.Group>
+
+                            <Form.Group as={Row} className="mb-3">
+                                <Form.Label column sm="2">
+                                    Expected Result
+                                </Form.Label>
+                                <Col sm="10">
+                                    <Form.Control as="textarea" id="expected" value={bugFields.expectedResult} onChange={e => setBugFields({ ...bugFields, expectedResult: e.target.value})}></Form.Control>
+                                </Col>
+                            </Form.Group>
+
+                            <Form.Group as={Row} className="mb-3">
+                                <Form.Label column sm="2">
+                                    Actual Result
+                                </Form.Label>
+                                <Col sm="10">
+                                    <Form.Control as="textarea" id="actual" value={bugFields.actualResult} onChange={e => setBugFields({ ...bugFields, actualResult: e.target.value})}></Form.Control>
+                                </Col>
+                            </Form.Group>
+
+                            <Form.Group as={Row} className="mb-3">
+                                <Form.Label column sm="2">
+                                    Environment
+                                </Form.Label>
+                                <Col sm="10">
+                                    <Form.Control as="textarea" id="environment" value={bugFields.actualResult} onChange={e => setBugFields({ ...bugFields, environment: e.target.value})}></Form.Control>
+                                </Col>
+                            </Form.Group>
+                        </Form>
                     </>
                 )}
 
@@ -215,7 +233,7 @@ ${epicFields.scope}`;
                 )}
 
                 {/* Task and Epic fields are similar, keeping it simple for now */}
-                {(activeTab === 'task' || activeTab === 'epic') && (
+                {(['task', 'epic'].includes(activeTab)) && (
                     <>
                         <div className="space-y-2">
                             <Label>Summary</Label>
@@ -243,9 +261,9 @@ ${epicFields.scope}`;
                 )}
 
                 <div className="flex space-x-2 pt-4 border-t border-slate-100 dark:border-slate-800">
-                    <Button onClick={copyToClipboard} className="flex-1">
-                        <Copy className="mr-2 h-4 w-4" /> Copy to Clipboard
-                    </Button>
+                    <div className="flex-1">
+                        <CopyWithToast text={generateOutput()}/>
+                    </div>
                     <Button onClick={downloadFile} variant="outline" className="flex-1">
                         <Download className="mr-2 h-4 w-4" /> Download
                     </Button>
