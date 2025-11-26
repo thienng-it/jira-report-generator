@@ -83,7 +83,7 @@ function App() {
             {activeView === 'ticket' ? <TicketGenerator /> : <VerifiedCommentGenerator />}
 
             <footer className={`pt-8 text-center text-sm ${darkMode ? 'text-white/50' : 'text-white/60'}`}>
-              <p>&copy; {new Date().getFullYear()} Jira Report Generator. Built forQA Excellence.</p>
+              <p>&copy; {new Date().getFullYear()} Jira Report Generator. Built for QA Excellence.</p>
             </footer>
           </div>
         </main>
