@@ -24,10 +24,10 @@ function App() {
     <div className={`min-h-screen transition-all duration-700 ${darkMode ? 'gradient-bg-dark' : 'gradient-bg'} relative`}>
       <div className="flex h-screen overflow-hidden">
         {/* Apple-style Glass Sidebar */}
-        <aside className={`w-72 ${darkMode ? 'glass-dark' : 'glass'} border-r ${darkMode ? 'border-white/10' : 'border-white/30'} flex flex-col m-4 rounded-3xl overflow-hidden transition-all duration-500`}>
-          <div className={`p-8 border-b ${darkMode ? 'border-white/10' : 'border-white/20'}`}>
-            <h1 className="text-2xl font-semibold text-white flex items-center gap-3 tracking-tight">
-              <div className="p-2 rounded-xl bg-white/20 backdrop-blur-xl">
+        <aside className={`w-72 ${darkMode ? 'bg-white/20 backdrop-blur-2xl' : 'bg-white/75 backdrop-blur-2xl'} border-r ${darkMode ? 'border-white/20' : 'border-white/40'} flex flex-col m-4 rounded-3xl overflow-hidden transition-all duration-500 shadow-2xl`}>
+          <div className={`p-8 border-b ${darkMode ? 'border-white/20' : 'border-white/30'}`}>
+            <h1 className="text-2xl font-semibold text-white flex items-center gap-3 tracking-tight drop-shadow-lg">
+              <div className="p-2 rounded-xl bg-white/30 backdrop-blur-xl shadow-lg">
                 <FileText className="h-5 w-5 text-white" />
               </div>
               JiraGen
@@ -39,34 +39,34 @@ function App() {
               variant={activeView === 'ticket' ? 'default' : 'ghost'}
               className={`w-full justify-start h-12 rounded-xl transition-all duration-300 ${
                 activeView === 'ticket' 
-                  ? 'bg-white/25 hover:bg-white/35 text-white shadow-lg backdrop-blur-xl' 
-                  : 'text-white/70 hover:bg-white/10 hover:text-white'
+                  ? 'bg-white/35 hover:bg-white/45 text-white shadow-lg backdrop-blur-xl border border-white/40' 
+                  : 'text-white/90 hover:bg-white/20 hover:text-white hover:shadow-md'
               }`}
               onClick={() => setActiveView('ticket')}
             >
               <FileText className="mr-3 h-5 w-5" />
-              <span className="font-medium">Ticket Templates</span>
+              <span className="font-semibold">Ticket Templates</span>
             </Button>
             <Button
               variant={activeView === 'comment' ? 'default' : 'ghost'}
               className={`w-full justify-start h-12 rounded-xl transition-all duration-300 ${
                 activeView === 'comment' 
-                  ? 'bg-white/25 hover:bg-white/35 text-white shadow-lg backdrop-blur-xl' 
-                  : 'text-white/70 hover:bg-white/10 hover:text-white'
+                  ? 'bg-white/35 hover:bg-white/45 text-white shadow-lg backdrop-blur-xl border border-white/40' 
+                  : 'text-white/90 hover:bg-white/20 hover:text-white hover:shadow-md'
               }`}
               onClick={() => setActiveView('comment')}
             >
               <ClipboardCheck className="mr-3 h-5 w-5" />
-              <span className="font-medium">Verified Comment</span>
+              <span className="font-semibold">Verified Comment</span>
             </Button>
           </nav>
 
-          <div className={`p-6 border-t ${darkMode ? 'border-white/10' : 'border-white/20'}`}>
+          <div className={`p-6 border-t ${darkMode ? 'border-white/20' : 'border-white/30'}`}>
             <Button
               variant="ghost"
               size="icon"
               onClick={toggleDarkMode}
-              className="w-full h-12 rounded-xl text-white/70 hover:bg-white/10 hover:text-white transition-all duration-300"
+              className="w-full h-12 rounded-xl text-white hover:bg-white/20 hover:text-white transition-all duration-300 hover:shadow-md"
             >
               {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </Button>
