@@ -1,279 +1,216 @@
-import { useState } from 'react';
-import type { BugFields, StoryFields, TaskFields, EpicFields, TicketType } from '../types';
-import { Input } from './ui/input';
-import { Textarea } from './ui/textarea';
-import { Label } from './ui/label';
-import { Button } from './ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from './ui/card';
-import { Download } from 'lucide-react';
-import CopyWithToast from '../components/ui/copywithtoast';
-import {Col, Form, Row} from "react-bootstrap";
+import { useState, useEffect } from "react";
+import { Input } from "./ui/input";
+import { Textarea } from "./ui/textarea";
+import { Label } from "./ui/label";
+import { Button } from "./ui/button";
+import { Card, CardHeader, CardTitle, CardContent } from "./ui/card";
+import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "./ui/select";
+import { Download } from "lucide-react";
+import CopyWithToast from "./ui/copywithtoast";
 
 export function TicketGenerator() {
-    const [activeTab, setActiveTab] = useState<TicketType>('bug');
-
-    // State for each ticket type
-    const [bugFields, setBugFields] = useState<BugFields>({
-        summary: '',
-        stepsToReproduce: '',
-        expectedResult: '',
-        actualResult: '',
-        environment: '',
-        priority: 'Medium'
+    const [fields, setFields] = useState({
+        summary: "",
+        steps: "",
+        expectedResult: "",
+        actualResult: "",
+        environment: "",
+        severity: "Medium",
+        priority: "P3",
+        evidenceLinks: "",
     });
 
-    const [storyFields, setStoryFields] = useState<StoryFields>({
-        summary: '',
-        role: '',
-        feature: '',
-        benefit: '',
-        acceptanceCriteria: ''
-    });
+    const [files, setFiles] = useState<File[]>([]);
 
-    const [taskFields, setTaskFields] = useState<TaskFields>({
-        summary: '',
-        description: '',
-        scope: ''
-    });
-
-    const [epicFields, setEpicFields] = useState<EpicFields>({
-        summary: '',
-        description: '',
-        scope: ''
-    });
-
-    const generateOutput = () => {
-        switch (activeTab) {
-            case 'bug':
-                return `*Summary:* ${bugFields.summary}
-
-*Steps to Reproduce:*
-${bugFields.stepsToReproduce}
-
-*Expected Result:*
-${bugFields.expectedResult}
-
-*Actual Result:*
-${bugFields.actualResult}
-
-*Environment:*
-${bugFields.environment}
-
-*Priority:* ${bugFields.priority}`;
-
-            case 'story':
-                return `*Summary:* ${storyFields.summary}
-
-*User Story:*
-As a ${storyFields.role}, I want ${storyFields.feature}, so that ${storyFields.benefit}.
-
-*Acceptance Criteria:*
-${storyFields.acceptanceCriteria}`;
-
-            case 'task':
-                return `*Summary:* ${taskFields.summary}
-
-*Description:*
-${taskFields.description}
-
-*Scope:*
-${taskFields.scope}`;
-
-            case 'epic':
-                return `*Summary:* ${epicFields.summary}
-
-*Description:*
-${epicFields.description}
-
-*Scope:*
-${epicFields.scope}`;
+    // Auto-save
+    useEffect(() => {
+        const saved = localStorage.getItem("bug-form-v1");
+        if (saved) {
+            try {
+                const parsed = JSON.parse(saved);
+                // eslint-disable-next-line react-hooks/set-state-in-effect
+                setFields(parsed.fields || fields);
+                setFiles(parsed.files || []);
+            } catch { /* empty */ }
         }
-    };
+    }, []);
 
+    useEffect(() => {
+        localStorage.setItem(
+            "bug-form-v1",
+            JSON.stringify({ fields, files })
+        );
+    }, [fields, files]);
+
+    const generateBugText = () => {
+        return `🐞 *Summary:* ${fields.summary}
+
+📋 *Steps to Reproduce:*
+${fields.steps}
+
+🎯 *Expected Result:*
+${fields.expectedResult}
+
+⚠️ *Actual Result:*
+${fields.actualResult}
+
+🖥️ *Environment:* ${fields.environment}
+
+🔥 *Severity:* ${fields.severity}
+🏷️ *Priority:* ${fields.priority}
+
+📎 *Evidence Links:*
+${fields.evidenceLinks}
+`;
+    };
+    
     const downloadFile = () => {
-        const element = document.createElement("a");
-        const file = new Blob([generateOutput()], { type: 'text/plain' });
-        element.href = URL.createObjectURL(file);
-        element.download = `${activeTab}-ticket.txt`;
-        document.body.appendChild(element);
-        element.click();
-        document.body.removeChild(element);
-    };
-
-    const typeEmoji: Record<TicketType, string> = {
-        bug: '🐞',
-        story: '📘',
-        task: '🧩',
-        epic: '🌋',
+        const blob = new Blob([generateBugText()], { type: "text/plain" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "bug-report.txt";
+        a.click();
+        URL.revokeObjectURL(url);
     };
 
     return (
         <Card className="w-full">
             <CardHeader>
-                <CardTitle>Ticket Template Generator</CardTitle>
-                <CardDescription>Generate standardized Jira tickets.</CardDescription>
-                <div className="flex flex-wrap gap-3 mt-6">
-                    {(['bug', 'story', 'task', 'epic'] as TicketType[]).map((type) => (
-                        <Button
-                            key={type}
-                            variant={activeTab === type ? 'default' : 'outline'}
-                            onClick={() => setActiveTab(type)}
-                            className="gap-2 px-6 h-11"
-                        >
-                            <span className="text-base">{typeEmoji[type]}</span>
-                            <span className="capitalize">{type}</span>
-                        </Button>
-                    ))}
-                </div>
+                <CardTitle>🐞 Bug Report</CardTitle>
             </CardHeader>
+
             <CardContent className="space-y-6">
-                {activeTab === 'bug' && (
-                    <>
-                        <Form>
-                            <Form.Group as={Row} className="mb-3">
-                                <Form.Label column sm="2">
-                                    Summary
-                                </Form.Label>
-                                <Col sm="10">
-                                    <Form.Control id="summary" value={bugFields.summary} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setBugFields({ ...bugFields, summary: e.target.value})}></Form.Control>
-                                </Col>
-                            </Form.Group>
+                {/* SUMMARY */}
+                <div className="space-y-2">
+                    <Label htmlFor="summary">🐞 Summary</Label>
+                    <Input
+                        id="summary"
+                        value={fields.summary}
+                        onChange={(e) => setFields({ ...fields, summary: e.target.value })}
+                        placeholder="Short description of the bug"
+                    />
+                </div>
 
-                            <Form.Group as={Row} className="mb-3">
-                                <Form.Label column sm="2"><b>Priority</b></Form.Label>
-                                <Col sm="10">
-                                    <Form.Select
-                                        value={bugFields.priority}
-                                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setBugFields({ ...bugFields, priority: e.target.value })}
-                                    >
-                                        <option value="blocker">Blocker</option>
-                                        <option value="critical">Critical</option>
-                                        <option value="major">Major</option>
-                                        <option value="minor">Minor</option>
-                                    </Form.Select>
-                                </Col>
-                            </Form.Group>
+                {/* STEPS */}
+                <div className="space-y-2">
+                    <Label htmlFor="steps">📋 Steps to Reproduce</Label>
+                    <Textarea
+                        id="steps"
+                        className="h-28"
+                        value={fields.steps}
+                        onChange={(e) => setFields({ ...fields, steps: e.target.value })}
+                        placeholder="1. Go to...
+2. Click...
+3. Observe..."
+                    />
+                </div>
 
-                            <Form.Group as={Row} className="mb-3">
-                                <Form.Label column sm="2">
-                                    Steps to Reproduce
-                                </Form.Label>
-                                <Col sm="10">
-                                    <Form.Control as="textarea" id="steps" placeholder='1. Go to...
-2. Click on...' value={bugFields.stepsToReproduce} onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setBugFields({ ...bugFields, stepsToReproduce: e.target.value})}></Form.Control>
-                                </Col>
-                            </Form.Group>
+                {/* EXPECTED */}
+                <div className="space-y-2">
+                    <Label htmlFor="expected">🎯 Expected Result</Label>
+                    <Textarea
+                        id="expected"
+                        className="h-24"
+                        value={fields.expectedResult}
+                        onChange={(e) =>
+                            setFields({ ...fields, expectedResult: e.target.value })
+                        }
+                        placeholder="What should happen?"
+                    />
+                </div>
 
-                            <Form.Group as={Row} className="mb-3">
-                                <Form.Label column sm="2">
-                                    Expected Result
-                                </Form.Label>
-                                <Col sm="10">
-                                    <Form.Control as="textarea" id="expected" value={bugFields.expectedResult} onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setBugFields({ ...bugFields, expectedResult: e.target.value})}></Form.Control>
-                                </Col>
-                            </Form.Group>
+                {/* ACTUAL */}
+                <div className="space-y-2">
+                    <Label htmlFor="actual">⚠️ Actual Result</Label>
+                    <Textarea
+                        id="actual"
+                        className="h-24"
+                        value={fields.actualResult}
+                        onChange={(e) =>
+                            setFields({ ...fields, actualResult: e.target.value })
+                        }
+                        placeholder="What actually happened?"
+                    />
+                </div>
 
-                            <Form.Group as={Row} className="mb-3">
-                                <Form.Label column sm="2">
-                                    Actual Result
-                                </Form.Label>
-                                <Col sm="10">
-                                    <Form.Control as="textarea" id="actual" value={bugFields.actualResult} onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setBugFields({ ...bugFields, actualResult: e.target.value})}></Form.Control>
-                                </Col>
-                            </Form.Group>
+                {/* ENVIRONMENT */}
+                <div className="space-y-2">
+                    <Label htmlFor="environment">🖥️ Environment</Label>
+                    <Input
+                        id="environment"
+                        value={fields.environment}
+                        onChange={(e) =>
+                            setFields({ ...fields, environment: e.target.value })
+                        }
+                        placeholder="Browser, OS, Build version"
+                    />
+                </div>
 
-                            <Form.Group as={Row} className="mb-3">
-                                <Form.Label column sm="2">
-                                    Environment
-                                </Form.Label>
-                                <Col sm="10">
-                                    <Form.Control as="textarea" id="environment" value={bugFields.environment} onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setBugFields({ ...bugFields, environment: e.target.value})}></Form.Control>
-                                </Col>
-                            </Form.Group>
-                        </Form>
-                    </>
-                )}
+                {/* SEVERITY */}
+                <div className="space-y-2">
+                    <Label>🔥 Severity</Label>
+                    <Select
+                        value={fields.severity}
+                        onValueChange={(value) =>
+                            setFields({ ...fields, severity: value })
+                        }
+                    >
+                        <SelectTrigger>
+                            <SelectValue placeholder="Select severity" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="Critical">Critical</SelectItem>
+                            <SelectItem value="High">High</SelectItem>
+                            <SelectItem value="Medium">Medium</SelectItem>
+                            <SelectItem value="Low">Low</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
 
-                {activeTab === 'story' && (
-                    <>
-                        <div className="space-y-2">
-                            <Label>Summary</Label>
-                            <Input
-                                value={storyFields.summary}
-                                onChange={(e) => setStoryFields({ ...storyFields, summary: e.target.value })}
-                            />
-                        </div>
-                        <div className="grid grid-cols-3 gap-4">
-                            <div className="space-y-2">
-                                <Label>As a...</Label>
-                                <Input
-                                    value={storyFields.role}
-                                    onChange={(e) => setStoryFields({ ...storyFields, role: e.target.value })}
-                                    placeholder="user role"
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <Label>I want...</Label>
-                                <Input
-                                    value={storyFields.feature}
-                                    onChange={(e) => setStoryFields({ ...storyFields, feature: e.target.value })}
-                                    placeholder="feature"
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <Label>So that...</Label>
-                                <Input
-                                    value={storyFields.benefit}
-                                    onChange={(e) => setStoryFields({ ...storyFields, benefit: e.target.value })}
-                                    placeholder="benefit"
-                                />
-                            </div>
-                        </div>
-                        <div className="space-y-2">
-                            <Label>Acceptance Criteria</Label>
-                            <Textarea
-                                value={storyFields.acceptanceCriteria}
-                                onChange={(e) => setStoryFields({ ...storyFields, acceptanceCriteria: e.target.value })}
-                                className="h-32"
-                            />
-                        </div>
-                    </>
-                )}
+                {/* PRIORITY */}
+                <div className="space-y-2">
+                    <Label>🏷️ Priority</Label>
+                    <Select
+                        value={fields.priority}
+                        onValueChange={(value) =>
+                            setFields({ ...fields, priority: value })
+                        }
+                    >
+                        <SelectTrigger>
+                            <SelectValue placeholder="Select priority" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="P1">P1</SelectItem>
+                            <SelectItem value="P2">P2</SelectItem>
+                            <SelectItem value="P3">P3</SelectItem>
+                            <SelectItem value="P4">P4</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
 
-                {/* Task and Epic fields are similar, keeping it simple for now */}
-                {(['task', 'epic'].includes(activeTab)) && (
-                    <>
-                        <div className="space-y-2">
-                            <Label>Summary</Label>
-                            <Input
-                                value={activeTab === 'task' ? taskFields.summary : epicFields.summary}
-                                onChange={(e) => activeTab === 'task' ? setTaskFields({ ...taskFields, summary: e.target.value }) : setEpicFields({ ...epicFields, summary: e.target.value })}
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <Label>Description</Label>
-                            <Textarea
-                                value={activeTab === 'task' ? taskFields.description : epicFields.description}
-                                onChange={(e) => activeTab === 'task' ? setTaskFields({ ...taskFields, description: e.target.value }) : setEpicFields({ ...epicFields, description: e.target.value })}
-                                className="h-32"
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <Label>Scope</Label>
-                            <Textarea
-                                value={activeTab === 'task' ? taskFields.scope : epicFields.scope}
-                                onChange={(e) => activeTab === 'task' ? setTaskFields({ ...taskFields, scope: e.target.value }) : setEpicFields({ ...epicFields, scope: e.target.value })}
-                            />
-                        </div>
-                    </>
-                )}
+                {/* EVIDENCE LINKS */}
+                <div className="space-y-2">
+                    <Label htmlFor="evidenceLinks">📎 Evidence Links</Label>
+                    <Textarea
+                        id="evidenceLinks"
+                        className="h-20"
+                        value={fields.evidenceLinks}
+                        onChange={(e) =>
+                            setFields({ ...fields, evidenceLinks: e.target.value })
+                        }
+                        placeholder="Paste screenshot URLs, logs, video links…"
+                    />
+                </div>
 
-                <div className="flex gap-3 pt-6 mt-6 border-t border-white/20 dark:border-white/10">
+                {/* ACTION BUTTONS */}
+                <div className="flex gap-2 pt-4">
                     <div className="flex-1">
-                        <CopyWithToast text={generateOutput()}/>
+                        <CopyWithToast text={generateBugText()}/>
                     </div>
-                    <Button onClick={downloadFile} variant="outline" className="flex-1 h-12">
-                        <Download className="mr-2 h-5 w-5" /> Download
+
+                    <Button onClick={downloadFile} variant="outline" className="flex-1">
+                        <Download className="mr-2 h-4 w-4" /> Download
                     </Button>
                 </div>
             </CardContent>
