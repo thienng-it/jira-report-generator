@@ -27,15 +27,18 @@ export function VerifiedCommentGenerator() {
     useEffect(() => {
         const savedData = localStorage.getItem('jira-verified-comment-presets');
         if (savedData) {
-            const parsed = JSON.parse(savedData);
-            // eslint-disable-next-line react-hooks/set-state-in-effect
-            setFields(prev => ({
-                ...prev,
-                environment: parsed.environment || '',
-                platform: parsed.platform || '',
-                buildVersion: parsed.buildVersion || '',
-                testAccounts: parsed.testAccounts || '',
-            }));
+            try {
+                const parsed = JSON.parse(savedData);
+                setFields(prev => ({
+                    ...prev,
+                    environment: parsed.environment || '',
+                    platform: parsed.platform || '',
+                    buildVersion: parsed.buildVersion || '',
+                    testAccounts: parsed.testAccounts || '',
+                }));
+            } catch (error) {
+                console.error('Failed to parse saved presets:', error);
+            }
         }
     }, []);
 
@@ -184,7 +187,7 @@ ${fields.evidence}
                     <select
                         className="flex h-10 w-full rounded-md border border-slate-300 bg-white text-slate-900 px-3 py-2 text-sm ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300"
                         value={fields.status}
-                        onChange={(e) => setFields({ ...fields, status: e.target.value })}
+                        onChange={(e) => setFields({ ...fields, status: e.target.value as 'Pass' | 'Fail' | 'Blocked' | 'Skipped' })}
                     >
                         <option value="Pass">Pass</option>
                         <option value="Fail">Fail</option>

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Row, Col, Toast } from 'react-bootstrap';
-import { Button } from "./button.tsx";
+import { Button } from "./button";
 
 const CopyWithToast = ({ text, className }:{ text: string, className?: string}) => {
     const [show, setShow] = useState(false);

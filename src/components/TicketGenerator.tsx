@@ -6,7 +6,7 @@ import { Label } from './ui/label';
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from './ui/card';
 import { Download } from 'lucide-react';
-import CopyWithToast from '../components/ui/copywithtoast.tsx';
+import CopyWithToast from '../components/ui/copywithtoast';
 import {Col, Form, Row} from "react-bootstrap";
 
 export function TicketGenerator() {
@@ -127,7 +127,7 @@ ${epicFields.scope}`;
                                     Summary
                                 </Form.Label>
                                 <Col sm="10">
-                                    <Form.Control id="summary" value={bugFields.summary} onChange={e => setBugFields({ ...bugFields, summary: e.target.value})}></Form.Control>
+                                    <Form.Control id="summary" value={bugFields.summary} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setBugFields({ ...bugFields, summary: e.target.value})}></Form.Control>
                                 </Col>
                             </Form.Group>
 
@@ -136,7 +136,7 @@ ${epicFields.scope}`;
                                 <Col sm="10">
                                     <Form.Select
                                         value={bugFields.priority}
-                                        onChange={(e) => setBugFields({ ...bugFields, priority: e.target.value })}
+                                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setBugFields({ ...bugFields, priority: e.target.value })}
                                     >
                                         <option value="blocker">Blocker</option>
                                         <option value="critical">Critical</option>
@@ -152,7 +152,7 @@ ${epicFields.scope}`;
                                 </Form.Label>
                                 <Col sm="10">
                                     <Form.Control as="textarea" id="steps" placeholder='1. Go to...
-2. Click on...' value={bugFields.stepsToReproduce} onChange={e => setBugFields({ ...bugFields, stepsToReproduce: e.target.value})}></Form.Control>
+2. Click on...' value={bugFields.stepsToReproduce} onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setBugFields({ ...bugFields, stepsToReproduce: e.target.value})}></Form.Control>
                                 </Col>
                             </Form.Group>
 
@@ -161,7 +161,7 @@ ${epicFields.scope}`;
                                     Expected Result
                                 </Form.Label>
                                 <Col sm="10">
-                                    <Form.Control as="textarea" id="expected" value={bugFields.expectedResult} onChange={e => setBugFields({ ...bugFields, expectedResult: e.target.value})}></Form.Control>
+                                    <Form.Control as="textarea" id="expected" value={bugFields.expectedResult} onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setBugFields({ ...bugFields, expectedResult: e.target.value})}></Form.Control>
                                 </Col>
                             </Form.Group>
 
@@ -170,7 +170,7 @@ ${epicFields.scope}`;
                                     Actual Result
                                 </Form.Label>
                                 <Col sm="10">
-                                    <Form.Control as="textarea" id="actual" value={bugFields.actualResult} onChange={e => setBugFields({ ...bugFields, actualResult: e.target.value})}></Form.Control>
+                                    <Form.Control as="textarea" id="actual" value={bugFields.actualResult} onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setBugFields({ ...bugFields, actualResult: e.target.value})}></Form.Control>
                                 </Col>
                             </Form.Group>
 
@@ -179,7 +179,7 @@ ${epicFields.scope}`;
                                     Environment
                                 </Form.Label>
                                 <Col sm="10">
-                                    <Form.Control as="textarea" id="environment" value={bugFields.actualResult} onChange={e => setBugFields({ ...bugFields, environment: e.target.value})}></Form.Control>
+                                    <Form.Control as="textarea" id="environment" value={bugFields.environment} onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setBugFields({ ...bugFields, environment: e.target.value})}></Form.Control>
                                 </Col>
                             </Form.Group>
                         </Form>

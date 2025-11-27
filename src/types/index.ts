@@ -38,7 +38,7 @@ export interface VerifiedCommentFields {
     testAccounts: string;
     testInfo: string;
     testResults: string;
-    status: 'Pass' | 'Fail' | 'Blocked' | 'Skipped' | string;
+    status: 'Pass' | 'Fail' | 'Blocked' | 'Skipped';
     evidence: string;
     cc: string;
 }
