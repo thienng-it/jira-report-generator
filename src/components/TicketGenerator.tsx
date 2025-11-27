@@ -100,6 +100,13 @@ ${epicFields.scope}`;
         document.body.removeChild(element);
     };
 
+    const typeEmoji: Record<TicketType, string> = {
+        bug: '🐞',
+        story: '📘',
+        task: '🧩',
+        epic: '🌋',
+    };
+
     return (
         <Card className="w-full">
             <CardHeader>
@@ -111,9 +118,9 @@ ${epicFields.scope}`;
                             key={type}
                             variant={activeTab === type ? 'default' : 'outline'}
                             onClick={() => setActiveTab(type)}
-                            className="capitalize"
                         >
-                            {type}
+                            <span>{typeEmoji[type]}</span>
+                            <span className="capitalize">{type}</span>
                         </Button>
                     ))}
                 </div>
