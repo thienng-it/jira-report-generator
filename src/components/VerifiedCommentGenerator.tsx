@@ -101,7 +101,7 @@ ${fields.evidence}
         <Card className="w-full">
             <CardHeader>
                 <CardTitle>Verified Comment Generator</CardTitle>
-                <CardDescription>Generate standardized verification comments for Jira tickets.</CardDescription>
+                <CardDescription className="text-base">Generate standardized verification comments for Jira tickets.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
                 <div className="space-y-2">

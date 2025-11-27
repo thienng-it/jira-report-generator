@@ -73,7 +73,7 @@ function App() {
                 {activeView === 'ticket' ? <FileText className="h-8 w-8 text-blue-400" /> : <ClipboardCheck className="h-8 w-8 text-green-400" />}
                 {activeView === 'ticket' ? 'Ticket Templates' : 'Verified Comment Generator'}
               </h2>
-              <p className={`${darkMode ? 'text-white/70' : 'text-white/80'} drop-shadow`}>
+              <p className={`${darkMode ? 'text-white' : 'text-white'} text-base font-medium drop-shadow-md`}>
                 {activeView === 'ticket'
                   ? 'Generate standardized descriptions for Bugs, Stories, Tasks, and Epics.'
                   : 'Create consistent verification reports for your QA process.'}
@@ -82,7 +82,7 @@ function App() {
 
             {activeView === 'ticket' ? <TicketGenerator /> : <VerifiedCommentGenerator />}
 
-            <footer className={`pt-8 text-center text-sm ${darkMode ? 'text-white/50' : 'text-white/60'}`}>
+            <footer className={`pt-8 text-center text-sm ${darkMode ? 'text-white/90' : 'text-white/95'} drop-shadow`}>
               <p>&copy; {new Date().getFullYear()} Jira Report Generator. Built for QA Excellence.</p>
             </footer>
           </div>

@@ -17,15 +17,16 @@
 .form-label,
 .col-form-label,
 label.form-label {
-  color: #0f172a !important;
-  font-weight: 600 !important;
+  color: #020617 !important;
+  font-weight: 700 !important;
+  font-size: 0.95rem !important;
 }
 
 .dark .form-label,
 .dark .col-form-label,
 .dark label.form-label {
-  color: #f1f5f9 !important;
-  font-weight: 600 !important;
+  color: #f8fafc !important;
+  font-weight: 700 !important;
 }
 
 /* Fix React Bootstrap form controls */

@@ -111,16 +111,17 @@ ${epicFields.scope}`;
         <Card className="w-full">
             <CardHeader>
                 <CardTitle>Ticket Template Generator</CardTitle>
-                <CardDescription>Generate standardized Jira tickets.</CardDescription>
+                <CardDescription className="text-base">Generate standardized Jira tickets.</CardDescription>
                 <div className="flex space-x-2 mt-4">
                     {(['bug', 'story', 'task', 'epic'] as TicketType[]).map((type) => (
                         <Button
                             key={type}
                             variant={activeTab === type ? 'default' : 'outline'}
                             onClick={() => setActiveTab(type)}
+                            className="gap-2"
                         >
                             <span>{typeEmoji[type]}</span>
-                            <span className="capitalize">{type}</span>
+                            <span className="capitalize font-semibold">{type}</span>
                         </Button>
                     ))}
                 </div>
