@@ -11,6 +11,27 @@
   body {
     @apply antialiased;
   }
+
+  /* Fix React Bootstrap form labels visibility */
+  .form-label,
+  label {
+    @apply text-slate-700 dark:text-slate-200 font-medium;
+  }
+
+  /* Fix React Bootstrap form controls */
+  .form-control,
+  .form-select {
+    @apply bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 border-slate-300 dark:border-slate-600;
+  }
+
+  .form-control::placeholder {
+    @apply text-slate-400 dark:text-slate-500;
+  }
+
+  .form-control:focus,
+  .form-select:focus {
+    @apply border-blue-500 dark:border-blue-400 ring-2 ring-blue-500/20;
+  }
 }
 
 @layer utilities {
