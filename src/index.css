@@ -17,14 +17,15 @@
 .form-label,
 .col-form-label,
 label.form-label {
-  color: #334155 !important;
-  font-weight: 500 !important;
+  color: #0f172a !important;
+  font-weight: 600 !important;
 }
 
 .dark .form-label,
 .dark .col-form-label,
 .dark label.form-label {
-  color: #e2e8f0 !important;
+  color: #f1f5f9 !important;
+  font-weight: 600 !important;
 }
 
 /* Fix React Bootstrap form controls */
@@ -32,28 +33,30 @@ label.form-label {
 .form-select {
   background-color: #ffffff !important;
   color: #0f172a !important;
-  border-color: #cbd5e1 !important;
+  border: 2px solid #cbd5e1 !important;
+  font-weight: 500 !important;
 }
 
 .dark .form-control,
 .dark .form-select {
   background-color: #1e293b !important;
   color: #f1f5f9 !important;
-  border-color: #475569 !important;
+  border: 2px solid #475569 !important;
 }
 
 .form-control::placeholder {
-  color: #94a3b8 !important;
+  color: #64748b !important;
 }
 
 .dark .form-control::placeholder {
-  color: #64748b !important;
+  color: #94a3b8 !important;
 }
 
 .form-control:focus,
 .form-select:focus {
   border-color: #3b82f6 !important;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25) !important;
+  outline: none !important;
 }
 
 @layer utilities {
@@ -66,7 +69,7 @@ label.form-label {
   }
   
   .gradient-bg {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
   }
   
   .gradient-bg-dark {
