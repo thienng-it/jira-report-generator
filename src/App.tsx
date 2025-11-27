@@ -35,7 +35,7 @@ function App() {
           </div>
           
           <Button
-            variant="ghost"
+            variant="outline"
             size="icon"
             onClick={toggleDarkMode}
             className="h-10 w-10 md:h-12 md:w-12 rounded-xl text-white hover:bg-white/20 hover:text-white transition-all duration-300 hover:shadow-md"
