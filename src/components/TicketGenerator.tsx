@@ -152,7 +152,7 @@ ${fields.evidenceLinks}
                     <Label>🔥 Severity</Label>
                     <Select
                         value={fields.severity}
-                        onValueChange={(value) =>
+                        onValueChange={(value: string) =>
                             setFields({ ...fields, severity: value })
                         }
                     >
@@ -173,7 +173,7 @@ ${fields.evidenceLinks}
                     <Label>🏷️ Priority</Label>
                     <Select
                         value={fields.priority}
-                        onValueChange={(value) =>
+                        onValueChange={(value: string) =>
                             setFields({ ...fields, priority: value })
                         }
                     >
