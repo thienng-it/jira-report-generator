@@ -15,7 +15,6 @@ export default defineConfig({
         },
       },
     },
-    sourcemap: mode === 'development',
     minify: 'esbuild',
     cssMinify: true,
   },
