@@ -4,8 +4,9 @@
 
 @layer base {
   :root {
-    --gradient-start: #667eea;
-    --gradient-end: #764ba2;
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.3);
+    --shadow-glass: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
   }
   
   body {
@@ -13,67 +14,101 @@
   }
 }
 
-/* Fix React Bootstrap form labels visibility - plain CSS with !important for higher specificity */
+/* Apple-style Glassmorphism Form Labels */
 .form-label,
 .col-form-label,
 label.form-label {
-  color: #020617 !important;
-  font-weight: 700 !important;
-  font-size: 0.95rem !important;
+  color: #1d1d1f !important;
+  font-weight: 600 !important;
+  font-size: 0.9375rem !important;
+  letter-spacing: -0.01em !important;
 }
 
 .dark .form-label,
 .dark .col-form-label,
 .dark label.form-label {
-  color: #f8fafc !important;
-  font-weight: 700 !important;
+  color: #f5f5f7 !important;
+  font-weight: 600 !important;
 }
 
-/* Fix React Bootstrap form controls */
+/* Apple-style Glass Form Controls */
 .form-control,
 .form-select {
-  background-color: #ffffff !important;
-  color: #0f172a !important;
-  border: 2px solid #cbd5e1 !important;
+  background: rgba(255, 255, 255, 0.8) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  color: #1d1d1f !important;
+  border: 1px solid rgba(255, 255, 255, 0.4) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06) !important;
   font-weight: 500 !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  border-radius: 12px !important;
 }
 
 .dark .form-control,
 .dark .form-select {
-  background-color: #1e293b !important;
-  color: #f1f5f9 !important;
-  border: 2px solid #475569 !important;
+  background: rgba(30, 30, 32, 0.8) !important;
+  color: #f5f5f7 !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3) !important;
 }
 
 .form-control::placeholder {
-  color: #64748b !important;
+  color: rgba(29, 29, 31, 0.5) !important;
 }
 
 .dark .form-control::placeholder {
-  color: #94a3b8 !important;
+  color: rgba(245, 245, 247, 0.5) !important;
 }
 
 .form-control:focus,
 .form-select:focus {
-  border-color: #3b82f6 !important;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25) !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+  border-color: rgba(0, 125, 250, 0.5) !important;
+  box-shadow: 0 4px 20px rgba(0, 125, 250, 0.15), 0 0 0 4px rgba(0, 125, 250, 0.1) !important;
   outline: none !important;
+  transform: translateY(-1px) !important;
+}
+
+.dark .form-control:focus,
+.dark .form-select:focus {
+  background: rgba(30, 30, 32, 0.95) !important;
+  border-color: rgba(10, 132, 255, 0.5) !important;
 }
 
 @layer utilities {
   .glass {
-    @apply bg-white/10 backdrop-blur-xl border border-white/20;
+    @apply bg-white/70 backdrop-blur-2xl border border-white/30;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
   }
   
   .glass-dark {
-    @apply bg-slate-900/40 backdrop-blur-xl border border-slate-700/50;
+    @apply bg-black/30 backdrop-blur-2xl border border-white/10;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
   }
   
   .gradient-bg {
-    background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    position: relative;
+  }
+  
+  .gradient-bg::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 50%, rgba(240, 147, 251, 0.1) 100%);
+    animation: gradient-shift 15s ease infinite;
+  }
+  
+  @keyframes gradient-shift {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.8; }
   }
   
   .gradient-bg-dark {
-    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    background: linear-gradient(135deg, #0f0f14 0%, #1a1a2e 50%, #16213e 100%);
   }
 }

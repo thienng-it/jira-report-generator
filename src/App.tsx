@@ -21,59 +21,69 @@ function App() {
   };
 
   return (
-    <div className={`min-h-screen transition-all duration-500 ${darkMode ? 'gradient-bg-dark' : 'gradient-bg'}`}>
+    <div className={`min-h-screen transition-all duration-700 ${darkMode ? 'gradient-bg-dark' : 'gradient-bg'} relative`}>
       <div className="flex h-screen overflow-hidden">
-        {/* Sidebar */}
-        <aside className={`w-64 ${darkMode ? 'glass-dark' : 'glass'} border-r ${darkMode ? 'border-white/10' : 'border-white/30'} flex flex-col shadow-2xl`}>
-          <div className={`p-6 border-b ${darkMode ? 'border-white/10' : 'border-white/30'}`}>
-            <h1 className="text-xl font-bold text-white flex items-center gap-2 drop-shadow-lg">
-              <FileText className="h-6 w-6 text-blue-400" />
+        {/* Apple-style Glass Sidebar */}
+        <aside className={`w-72 ${darkMode ? 'glass-dark' : 'glass'} border-r ${darkMode ? 'border-white/10' : 'border-white/30'} flex flex-col m-4 rounded-3xl overflow-hidden transition-all duration-500`}>
+          <div className={`p-8 border-b ${darkMode ? 'border-white/10' : 'border-white/20'}`}>
+            <h1 className="text-2xl font-semibold text-white flex items-center gap-3 tracking-tight">
+              <div className="p-2 rounded-xl bg-white/20 backdrop-blur-xl">
+                <FileText className="h-5 w-5 text-white" />
+              </div>
               JiraGen
             </h1>
           </div>
 
-          <nav className="flex-1 p-4 space-y-2">
+          <nav className="flex-1 p-6 space-y-3">
             <Button
               variant={activeView === 'ticket' ? 'default' : 'ghost'}
-              className={`w-full justify-start ${activeView === 'ticket' ? 'bg-white/20 hover:bg-white/30 text-white border border-white/30' : 'text-white/80 hover:bg-white/10 hover:text-white'}`}
+              className={`w-full justify-start h-12 rounded-xl transition-all duration-300 ${
+                activeView === 'ticket' 
+                  ? 'bg-white/25 hover:bg-white/35 text-white shadow-lg backdrop-blur-xl' 
+                  : 'text-white/70 hover:bg-white/10 hover:text-white'
+              }`}
               onClick={() => setActiveView('ticket')}
             >
-              <FileText className="mr-2 h-4 w-4" />
-              Ticket Templates
+              <FileText className="mr-3 h-5 w-5" />
+              <span className="font-medium">Ticket Templates</span>
             </Button>
             <Button
               variant={activeView === 'comment' ? 'default' : 'ghost'}
-              className={`w-full justify-start ${activeView === 'comment' ? 'bg-white/20 hover:bg-white/30 text-white border border-white/30' : 'text-white/80 hover:bg-white/10 hover:text-white'}`}
+              className={`w-full justify-start h-12 rounded-xl transition-all duration-300 ${
+                activeView === 'comment' 
+                  ? 'bg-white/25 hover:bg-white/35 text-white shadow-lg backdrop-blur-xl' 
+                  : 'text-white/70 hover:bg-white/10 hover:text-white'
+              }`}
               onClick={() => setActiveView('comment')}
             >
-              <ClipboardCheck className="mr-2 h-4 w-4" />
-              Verified Comment
+              <ClipboardCheck className="mr-3 h-5 w-5" />
+              <span className="font-medium">Verified Comment</span>
             </Button>
           </nav>
 
-          <div className={`p-4 border-t ${darkMode ? 'border-white/10' : 'border-white/30'}`}>
-            <div className="flex items-center justify-center">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={toggleDarkMode}
-                className="text-white/80 hover:bg-white/10 hover:text-white"
-              >
-                {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-              </Button>
-            </div>
+          <div className={`p-6 border-t ${darkMode ? 'border-white/10' : 'border-white/20'}`}>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleDarkMode}
+              className="w-full h-12 rounded-xl text-white/70 hover:bg-white/10 hover:text-white transition-all duration-300"
+            >
+              {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            </Button>
           </div>
         </aside>
 
-        {/* Main Content */}
+        {/* Main Content with Apple-style spacing */}
         <main className="flex-1 overflow-auto p-8">
-          <div className="max-w-3xl mx-auto space-y-8">
-            <div className="space-y-2">
-              <h2 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3 drop-shadow-lg">
-                {activeView === 'ticket' ? <FileText className="h-8 w-8 text-blue-400" /> : <ClipboardCheck className="h-8 w-8 text-green-400" />}
+          <div className="max-w-4xl mx-auto space-y-8">
+            <div className="space-y-3 mb-8">
+              <h2 className="text-4xl font-semibold tracking-tight text-white flex items-center gap-4">
+                <div className={`p-3 rounded-2xl ${darkMode ? 'bg-white/10' : 'bg-white/20'} backdrop-blur-xl`}>
+                  {activeView === 'ticket' ? <FileText className="h-7 w-7 text-white" /> : <ClipboardCheck className="h-7 w-7 text-white" />}
+                </div>
                 {activeView === 'ticket' ? 'Ticket Templates' : 'Verified Comment Generator'}
               </h2>
-              <p className={`${darkMode ? 'text-white' : 'text-white'} text-base font-medium drop-shadow-md`}>
+              <p className="text-white/90 text-lg font-normal tracking-tight pl-1">
                 {activeView === 'ticket'
                   ? 'Generate standardized descriptions for Bugs, Stories, Tasks, and Epics.'
                   : 'Create consistent verification reports for your QA process.'}
@@ -82,7 +92,7 @@ function App() {
 
             {activeView === 'ticket' ? <TicketGenerator /> : <VerifiedCommentGenerator />}
 
-            <footer className={`pt-8 text-center text-sm ${darkMode ? 'text-white/90' : 'text-white/95'} drop-shadow`}>
+            <footer className="pt-12 text-center text-sm text-white/60 font-normal">
               <p>&copy; {new Date().getFullYear()} Jira Report Generator. Built for QA Excellence.</p>
             </footer>
           </div>

@@ -111,22 +111,22 @@ ${epicFields.scope}`;
         <Card className="w-full">
             <CardHeader>
                 <CardTitle>Ticket Template Generator</CardTitle>
-                <CardDescription className="text-base">Generate standardized Jira tickets.</CardDescription>
-                <div className="flex space-x-2 mt-4">
+                <CardDescription>Generate standardized Jira tickets.</CardDescription>
+                <div className="flex flex-wrap gap-3 mt-6">
                     {(['bug', 'story', 'task', 'epic'] as TicketType[]).map((type) => (
                         <Button
                             key={type}
                             variant={activeTab === type ? 'default' : 'outline'}
                             onClick={() => setActiveTab(type)}
-                            className="gap-2"
+                            className="gap-2 px-6 h-11"
                         >
-                            <span>{typeEmoji[type]}</span>
-                            <span className="capitalize font-semibold">{type}</span>
+                            <span className="text-base">{typeEmoji[type]}</span>
+                            <span className="capitalize">{type}</span>
                         </Button>
                     ))}
                 </div>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-6">
                 {activeTab === 'bug' && (
                     <>
                         <Form>
@@ -268,12 +268,12 @@ ${epicFields.scope}`;
                     </>
                 )}
 
-                <div className="flex space-x-2 pt-4 border-t border-slate-100 dark:border-slate-800">
+                <div className="flex gap-3 pt-6 mt-6 border-t border-white/20 dark:border-white/10">
                     <div className="flex-1">
                         <CopyWithToast text={generateOutput()}/>
                     </div>
-                    <Button onClick={downloadFile} variant="outline" className="flex-1">
-                        <Download className="mr-2 h-4 w-4" /> Download
+                    <Button onClick={downloadFile} variant="outline" className="flex-1 h-12">
+                        <Download className="mr-2 h-5 w-5" /> Download
                     </Button>
                 </div>
             </CardContent>

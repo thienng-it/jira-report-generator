@@ -103,7 +103,7 @@ ${fields.evidence}
                 <CardTitle>Verified Comment Generator</CardTitle>
                 <CardDescription className="text-base">Generate standardized verification comments for Jira tickets.</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-6">
                 <div className="space-y-2">
                     <Label>Summary</Label>
                     <Input
@@ -185,7 +185,7 @@ ${fields.evidence}
                 <div className="space-y-2">
                     <Label>Status</Label>
                     <select
-                        className="flex h-10 w-full rounded-md border-2 border-slate-300 bg-white text-slate-950 px-3 py-2 text-sm font-medium ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:border-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-50 dark:ring-offset-slate-950 dark:focus-visible:ring-blue-400 dark:focus-visible:border-blue-400"
+                        className="flex h-12 w-full rounded-xl border border-white/30 bg-white/70 backdrop-blur-xl text-slate-950 px-4 py-3 text-sm font-medium ring-offset-white transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/30 focus-visible:border-blue-400/50 focus-visible:bg-white/90 focus-visible:shadow-lg disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/20 dark:bg-white/10 dark:text-slate-50 dark:focus-visible:bg-white/20"
                         value={fields.status}
                         onChange={(e) => setFields({ ...fields, status: e.target.value as 'Pass' | 'Fail' | 'Blocked' | 'Skipped' })}
                     >
@@ -215,12 +215,12 @@ ${fields.evidence}
                     />
                 </div>
 
-                <div className="flex space-x-2 pt-4 border-t border-slate-100 dark:border-slate-800">
+                <div className="flex gap-3 pt-6 mt-6 border-t border-white/20 dark:border-white/10">
                     <div className="flex-1">
                         <CopyWithToast text={generateOutput()}/>
                     </div>
-                    <Button onClick={downloadFile} variant="outline" className="flex-1">
-                        <Download className="mr-2 h-4 w-4" /> Download
+                    <Button onClick={downloadFile} variant="outline" className="flex-1 h-12">
+                        <Download className="mr-2 h-5 w-5" /> Download
                     </Button>
                 </div>
             </CardContent>

@@ -13,7 +13,7 @@ const CopyWithToast = ({ text, className }:{ text: string, className?: string}) 
     return (
         <div>
             <CopyToClipboard text={text}>
-                <Button onClick={handleCopy} disabled={!text} className={className}>
+                <Button onClick={handleCopy} disabled={!text} className={`w-full h-12 ${className}`}>
                     Copy to clipboard
                 </Button>
             </CopyToClipboard>
