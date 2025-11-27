@@ -5,4 +5,21 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   base: '/jira-report-generator/',
+  build: {
+    target: 'esnext',
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react'],
+          bootstrap: ['react-bootstrap', 'bootstrap'],
+        },
+      },
+    },
+    sourcemap: mode === 'development',
+    minify: 'esbuild',
+    cssMinify: true,
+  },
+  optimizeDeps: {
+    include: ['react'],
+  },
 })
