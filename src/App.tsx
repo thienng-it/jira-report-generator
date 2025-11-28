@@ -5,8 +5,13 @@ import { FileText, ClipboardCheck, Moon, Sun } from 'lucide-react';
 import { Button } from './components/ui/button';
 import BackToTop from "./components/ui/backToTop.tsx";
 
+type ActiveView = 'ticket' | 'comment';
+
 function App() {
-  const [activeView, setActiveView] = useState<'ticket' | 'comment'>('ticket');
+  const [activeView, setActiveView] = useState<ActiveView>(() => {
+    return (localStorage.getItem('activeView') as ActiveView) || 'ticket';
+  });
+
   const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
@@ -15,7 +20,8 @@ function App() {
     } else {
       document.documentElement.classList.remove('dark');
     }
-  }, [darkMode]);
+    localStorage.setItem('activeView', activeView);
+  }, [darkMode, activeView]);
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
