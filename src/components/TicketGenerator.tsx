@@ -1,13 +1,100 @@
 import { useState } from 'react';
 import type { BugFields, StoryFields, TaskFields, EpicFields, TicketType } from '../types';
-import { Input } from './ui/input';
-import { Textarea } from './ui/textarea';
-import { Label } from './ui/label';
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from './ui/card';
-import { Download } from 'lucide-react';
-import CopyWithToast from '../components/ui/copywithtoast';
-import {Col, Form, Row} from "react-bootstrap";
+import {Form} from "react-bootstrap";
+import FormField from "./ui/formField.tsx";
+import ActionBar from "./ui/actionBar.tsx";
+
+const bugFieldConfig = [
+    {
+        id: "summary",
+        label: "Summary",
+        type: "text",
+    },
+    {
+        id: "priority",
+        label: "Priority",
+        type: "select",
+        options: [
+            { value: "blocker", label: "Blocker" },
+            { value: "critical", label: "Critical" },
+            { value: "major", label: "Major" },
+            { value: "minor", label: "Minor" },
+        ],
+    },
+    {
+        id: "stepsToReproduce",
+        label: "Steps to Reproduce",
+        type: "textarea",
+        placeholder: `1. Go to...\n2. Click on...`,
+    },
+    {
+        id: "expectedResult",
+        label: "Expected Result",
+        type: "textarea",
+    },
+    {
+        id: "actualResult",
+        label: "Actual Result",
+        type: "textarea",
+    },
+    {
+        id: "environment",
+        label: "Environment",
+        type: "textarea",
+    },
+];
+
+const storyFieldConfig = [
+    {
+        id: "summary",
+        label: "Summary",
+        type: "text",
+    },
+    {
+        id: "role",
+        label: "As a...",
+        type: "text",
+        placeholder: "User role",
+    },
+    {
+        id: "feature",
+        label: "I want...",
+        type: "text",
+        placeholder: "feature",
+    },
+    {
+        id: "benefit",
+        label: "So that...",
+        type: "text",
+        placeholder: "brings what benefits",
+    },
+    {
+        id: "acceptanceCriteria",
+        label: "Acceptance Criteria",
+        type: "textarea",
+    },
+];
+
+// Task and Epic share the same fields for simplicity
+const taskFieldConfig = [
+    {
+        id: "summary",
+        label: "Summary",
+        type: "text",
+    },
+    {
+        id: "description",
+        label: "Description",
+        type: "textarea",
+    },
+    {
+        id: "scope",
+        label: "Scope",
+        type: "textarea",
+    },
+];
 
 export function TicketGenerator() {
     const [activeTab, setActiveTab] = useState<TicketType>('bug');
@@ -22,7 +109,7 @@ export function TicketGenerator() {
         priority: 'Medium'
     });
 
-    const [storyFields, setStoryFields] = useState<StoryFields>({
+    const [storyFields] = useState<StoryFields>({
         summary: '',
         role: '',
         feature: '',
@@ -30,13 +117,13 @@ export function TicketGenerator() {
         acceptanceCriteria: ''
     });
 
-    const [taskFields, setTaskFields] = useState<TaskFields>({
+    const [taskFields] = useState<TaskFields>({
         summary: '',
         description: '',
         scope: ''
     });
 
-    const [epicFields, setEpicFields] = useState<EpicFields>({
+    const [epicFields] = useState<EpicFields>({
         summary: '',
         description: '',
         scope: ''
@@ -90,16 +177,6 @@ ${epicFields.scope}`;
         }
     };
 
-    const downloadFile = () => {
-        const element = document.createElement("a");
-        const file = new Blob([generateOutput()], { type: 'text/plain' });
-        element.href = URL.createObjectURL(file);
-        element.download = `${activeTab}-ticket.txt`;
-        document.body.appendChild(element);
-        element.click();
-        document.body.removeChild(element);
-    };
-
     const typeEmoji: Record<TicketType, string> = {
         bug: '🐞',
         story: '📘',
@@ -130,152 +207,59 @@ ${epicFields.scope}`;
                 {activeTab === 'bug' && (
                     <>
                         <Form>
-                            <Form.Group as={Row} className="mb-3">
-                                <Form.Label column sm="2">
-                                    Summary
-                                </Form.Label>
-                                <Col sm="10">
-                                    <Form.Control id="summary" value={bugFields.summary} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setBugFields({ ...bugFields, summary: e.target.value})}></Form.Control>
-                                </Col>
-                            </Form.Group>
-
-                            <Form.Group as={Row} className="mb-3">
-                                <Form.Label column sm="2"><b>Priority</b></Form.Label>
-                                <Col sm="10">
-                                    <Form.Select
-                                        value={bugFields.priority}
-                                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setBugFields({ ...bugFields, priority: e.target.value })}
-                                    >
-                                        <option value="blocker">Blocker</option>
-                                        <option value="critical">Critical</option>
-                                        <option value="major">Major</option>
-                                        <option value="minor">Minor</option>
-                                    </Form.Select>
-                                </Col>
-                            </Form.Group>
-
-                            <Form.Group as={Row} className="mb-3">
-                                <Form.Label column sm="2">
-                                    Steps to Reproduce
-                                </Form.Label>
-                                <Col sm="10">
-                                    <Form.Control as="textarea" id="steps" placeholder='1. Go to...
-2. Click on...' value={bugFields.stepsToReproduce} onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setBugFields({ ...bugFields, stepsToReproduce: e.target.value})}></Form.Control>
-                                </Col>
-                            </Form.Group>
-
-                            <Form.Group as={Row} className="mb-3">
-                                <Form.Label column sm="2">
-                                    Expected Result
-                                </Form.Label>
-                                <Col sm="10">
-                                    <Form.Control as="textarea" id="expected" value={bugFields.expectedResult} onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setBugFields({ ...bugFields, expectedResult: e.target.value})}></Form.Control>
-                                </Col>
-                            </Form.Group>
-
-                            <Form.Group as={Row} className="mb-3">
-                                <Form.Label column sm="2">
-                                    Actual Result
-                                </Form.Label>
-                                <Col sm="10">
-                                    <Form.Control as="textarea" id="actual" value={bugFields.actualResult} onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setBugFields({ ...bugFields, actualResult: e.target.value})}></Form.Control>
-                                </Col>
-                            </Form.Group>
-
-                            <Form.Group as={Row} className="mb-3">
-                                <Form.Label column sm="2">
-                                    Environment
-                                </Form.Label>
-                                <Col sm="10">
-                                    <Form.Control as="textarea" id="environment" value={bugFields.environment} onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setBugFields({ ...bugFields, environment: e.target.value})}></Form.Control>
-                                </Col>
-                            </Form.Group>
+                            {bugFieldConfig.map(field => (
+                                <FormField
+                                    key={field['id']}
+                                    id={field.id}
+                                    label={field.label}
+                                    type={field.type}
+                                    value={bugFields[field['id'] as keyof BugFields]}
+                                    onChange={(v) => setBugFields({ ...bugFields, [field.id]: v })}
+                                    options={field.options}
+                                    placeholder={field.placeholder}
+                                />
+                            ))}
                         </Form>
                     </>
                 )}
 
                 {activeTab === 'story' && (
                     <>
-                        <div className="space-y-2">
-                            <Label>Summary</Label>
-                            <Input
-                                value={storyFields.summary}
-                                onChange={(e) => setStoryFields({ ...storyFields, summary: e.target.value })}
-                            />
-                        </div>
-                        <div className="grid grid-cols-3 gap-4">
-                            <div className="space-y-2">
-                                <Label>As a...</Label>
-                                <Input
-                                    value={storyFields.role}
-                                    onChange={(e) => setStoryFields({ ...storyFields, role: e.target.value })}
-                                    placeholder="user role"
+                        <Form>
+                            {storyFieldConfig.map(field => (
+                                <FormField
+                                    key={field['id']}
+                                    id={field.id}
+                                    label={field.label}
+                                    type={field.type}
+                                    value={bugFields[field['id'] as keyof BugFields]}
+                                    onChange={(v) => setBugFields({ ...bugFields, [field.id]: v })}
+                                    placeholder={field.placeholder}
                                 />
-                            </div>
-                            <div className="space-y-2">
-                                <Label>I want...</Label>
-                                <Input
-                                    value={storyFields.feature}
-                                    onChange={(e) => setStoryFields({ ...storyFields, feature: e.target.value })}
-                                    placeholder="feature"
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <Label>So that...</Label>
-                                <Input
-                                    value={storyFields.benefit}
-                                    onChange={(e) => setStoryFields({ ...storyFields, benefit: e.target.value })}
-                                    placeholder="benefit"
-                                />
-                            </div>
-                        </div>
-                        <div className="space-y-2">
-                            <Label>Acceptance Criteria</Label>
-                            <Textarea
-                                value={storyFields.acceptanceCriteria}
-                                onChange={(e) => setStoryFields({ ...storyFields, acceptanceCriteria: e.target.value })}
-                                className="h-32"
-                            />
-                        </div>
+                            ))}
+                        </Form>
                     </>
                 )}
 
                 {/* Task and Epic fields are similar, keeping it simple for now */}
                 {(['task', 'epic'].includes(activeTab)) && (
                     <>
-                        <div className="space-y-2">
-                            <Label>Summary</Label>
-                            <Input
-                                value={activeTab === 'task' ? taskFields.summary : epicFields.summary}
-                                onChange={(e) => activeTab === 'task' ? setTaskFields({ ...taskFields, summary: e.target.value }) : setEpicFields({ ...epicFields, summary: e.target.value })}
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <Label>Description</Label>
-                            <Textarea
-                                value={activeTab === 'task' ? taskFields.description : epicFields.description}
-                                onChange={(e) => activeTab === 'task' ? setTaskFields({ ...taskFields, description: e.target.value }) : setEpicFields({ ...epicFields, description: e.target.value })}
-                                className="h-32"
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <Label>Scope</Label>
-                            <Textarea
-                                value={activeTab === 'task' ? taskFields.scope : epicFields.scope}
-                                onChange={(e) => activeTab === 'task' ? setTaskFields({ ...taskFields, scope: e.target.value }) : setEpicFields({ ...epicFields, scope: e.target.value })}
-                            />
-                        </div>
+                        <Form>
+                            {taskFieldConfig.map(field => (
+                                <FormField
+                                    key={field['id']}
+                                    id={field.id}
+                                    label={field.label}
+                                    type={field.type}
+                                    value={bugFields[field['id'] as keyof BugFields]}
+                                    onChange={(v) => setBugFields({ ...bugFields, [field.id]: v })}
+                                />
+                            ))}
+                        </Form>
                     </>
                 )}
 
-                <div className="flex gap-3 pt-6 mt-6 border-t border-white/20 dark:border-white/10">
-                    <div className="flex-1">
-                        <CopyWithToast text={generateOutput()}/>
-                    </div>
-                    <Button onClick={downloadFile} variant="outline" className="flex-1 h-12">
-                        <Download className="mr-2 h-5 w-5" /> Download
-                    </Button>
-                </div>
+                <ActionBar text={generateOutput()} content={generateOutput()} fileName={`${activeTab}-ticket.txt`} />
             </CardContent>
         </Card>
     );

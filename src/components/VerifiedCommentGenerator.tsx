@@ -1,46 +1,64 @@
-import { useState, useEffect } from 'react';
-import type { VerifiedCommentFields } from '../types';
-import { Input } from './ui/input';
-import { Textarea } from './ui/textarea';
-import { Label } from './ui/label';
+import {useState} from 'react';
+import type {VerifiedCommentFields} from '../types';
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from './ui/card';
-import { Download, Save } from 'lucide-react';
-import CopyWithToast from "./ui/copywithtoast.tsx";
+import { Save } from 'lucide-react';
+import ActionBar from "./ui/actionBar.tsx";
+import FormField from "./ui/formField.tsx";
+import {Form} from "react-bootstrap";
+
+const commentFieldConfig = [
+    { id: 'summary', label: 'Summary', type: 'text', placeholder: "Brief summary of verification" },
+    { id: 'testExecutionLink', label: 'Test Execution Link', type: 'text', placeholder: "Link to test case execution" },
+    { id: 'environment', label: 'Environment', type: 'text', placeholder: "e.g. Staging, Prod" },
+    { id: 'platform', label: 'Platform/OS', type: 'text', placeholder: "e.g. Chrome/Mac" },
+    { id: 'buildVersion', label: 'Build Version', type: 'text', placeholder: "e.g. v1.2.3" },
+    { id: 'testAccounts', label: 'Test Accounts', type: 'text', placeholder: "e.g. user@example.com" },
+    { id: 'testInfo', label: 'Test Info (Optional)', type: 'text', placeholder: "Additional context" },
+    { id: 'testResults', label: 'Test Results', type: 'textarea', placeholder: "What was observed?" },
+    { id: 'status', label: 'Status', type: 'select', options: [
+            { value: "Pass", label: "Pass" },
+            { value: "Fail", label: "Fail" },
+            { value: "Blocked", label: "Blocked" },
+            { value: "Skipped", label: "Skipped" },
+        ] },
+    { id: 'evidence', label: 'Objective Evidences', type: 'textarea', placeholder: "Links to screenshots, videos, logs..." },
+    { id: 'cc', label: 'CC', type: 'text', placeholder: "@username" },
+];
 
 export function VerifiedCommentGenerator() {
-    const [fields, setFields] = useState<VerifiedCommentFields>({
-        summary: '',
-        testExecutionLink: '',
-        environment: '',
-        platform: '',
-        buildVersion: '',
-        testAccounts: '',
-        testInfo: '',
-        testResults: '',
-        status: 'Pass',
-        evidence: '',
-        cc: ''
-    });
-
-    // Load saved data from local storage on mount
-    useEffect(() => {
+    const [fields, setFields] = useState<VerifiedCommentFields>(() => {
         const savedData = localStorage.getItem('jira-verified-comment-presets');
+        let presets = {
+            environment: '',
+            platform: '',
+            buildVersion: '',
+            testAccounts: '',
+        };
+
         if (savedData) {
             try {
-                const parsed = JSON.parse(savedData);
-                setFields(prev => ({
-                    ...prev,
-                    environment: parsed.environment || '',
-                    platform: parsed.platform || '',
-                    buildVersion: parsed.buildVersion || '',
-                    testAccounts: parsed.testAccounts || '',
-                }));
-            } catch (error) {
-                console.error('Failed to parse saved presets:', error);
+                presets = JSON.parse(savedData);
+            } catch (e) {
+                console.error("Failed to parse presets", e);
             }
         }
-    }, []);
+
+        return {
+            summary: '',
+            testExecutionLink: '',
+            environment: presets.environment,
+            platform: presets.platform,
+            buildVersion: presets.buildVersion,
+            testAccounts: presets.testAccounts,
+            testInfo: '',
+            testResults: '',
+            status: 'Pass',
+            evidence: '',
+            cc: ''
+        };
+    });
+
 
     const savePresets = () => {
         const presets = {
@@ -87,16 +105,6 @@ ${fields.evidence}
         }
     };
 
-    const downloadFile = () => {
-        const element = document.createElement("a");
-        const file = new Blob([generateOutput()], { type: 'text/plain' });
-        element.href = URL.createObjectURL(file);
-        element.download = `verified-comment.txt`;
-        document.body.appendChild(element);
-        element.click();
-        document.body.removeChild(element);
-    };
-
     return (
         <Card className="w-full">
             <CardHeader>
@@ -104,125 +112,26 @@ ${fields.evidence}
                 <CardDescription className="text-base">Generate standardized verification comments for Jira tickets.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-                <div className="space-y-2">
-                    <Label>Summary</Label>
-                    <Input
-                        value={fields.summary}
-                        onChange={(e) => setFields({ ...fields, summary: e.target.value })}
-                        placeholder="Brief summary of verification"
-                    />
-                </div>
-
-                <div className="space-y-2">
-                    <Label>Test Execution Link</Label>
-                    <Input
-                        value={fields.testExecutionLink}
-                        onChange={(e) => setFields({ ...fields, testExecutionLink: e.target.value })}
-                        placeholder="Link to test case execution"
-                    />
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                        <Label>Environment</Label>
-                        <Input
-                            value={fields.environment}
-                            onChange={(e) => setFields({ ...fields, environment: e.target.value })}
-                            placeholder="e.g. Staging, Prod"
+                <Form>
+                    {commentFieldConfig.map(field => (
+                        <FormField
+                            key={field['id']}
+                            id={field.id}
+                            label={field.label}
+                            type={field.type}
+                            value={fields[field['id'] as keyof VerifiedCommentFields]}
+                            onChange={(v) => setFields({ ...fields, [field.id]: v })}
+                            options={field.options}
                         />
-                    </div>
-                    <div className="space-y-2">
-                        <Label>Platform/OS</Label>
-                        <Input
-                            value={fields.platform}
-                            onChange={(e) => setFields({ ...fields, platform: e.target.value })}
-                            placeholder="e.g. Chrome/Mac"
-                        />
-                    </div>
-                    <div className="space-y-2">
-                        <Label>Build Version</Label>
-                        <Input
-                            value={fields.buildVersion}
-                            onChange={(e) => setFields({ ...fields, buildVersion: e.target.value })}
-                            placeholder="e.g. v1.2.3"
-                        />
-                    </div>
-                    <div className="space-y-2">
-                        <Label>Test Accounts</Label>
-                        <Input
-                            value={fields.testAccounts}
-                            onChange={(e) => setFields({ ...fields, testAccounts: e.target.value })}
-                            placeholder="e.g. user@example.com"
-                        />
-                    </div>
-                </div>
-
+                    ))}
+                </Form>
                 <div className="flex justify-end">
                     <Button variant="ghost" size="sm" onClick={savePresets} title="Save Environment, Platform, Build, Accounts as default">
                         <Save className="mr-2 h-4 w-4" /> Save Presets
                     </Button>
                 </div>
 
-                <div className="space-y-2">
-                    <Label>Test Info (Optional)</Label>
-                    <Input
-                        value={fields.testInfo}
-                        onChange={(e) => setFields({ ...fields, testInfo: e.target.value })}
-                        placeholder="Additional context"
-                    />
-                </div>
-
-                <div className="space-y-2">
-                    <Label>Test Results</Label>
-                    <Textarea
-                        value={fields.testResults}
-                        onChange={(e) => setFields({ ...fields, testResults: e.target.value })}
-                        placeholder="What was observed?"
-                        className="h-24"
-                    />
-                </div>
-
-                <div className="space-y-2">
-                    <Label>Status</Label>
-                    <select
-                        className="flex h-12 w-full rounded-xl border border-white/40 bg-white/80 backdrop-blur-xl text-slate-950 px-4 py-3 text-sm font-medium ring-offset-white transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/30 focus-visible:border-blue-400/50 focus-visible:bg-white/95 focus-visible:shadow-lg disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/30 dark:bg-white/15 dark:text-white dark:focus-visible:bg-white/20"
-                        value={fields.status}
-                        onChange={(e) => setFields({ ...fields, status: e.target.value as 'Pass' | 'Fail' | 'Blocked' | 'Skipped' })}
-                    >
-                        <option value="Pass">Pass</option>
-                        <option value="Fail">Fail</option>
-                        <option value="Blocked">Blocked</option>
-                        <option value="Skipped">Skipped</option>
-                    </select>
-                </div>
-
-                <div className="space-y-2">
-                    <Label>Objective Evidences</Label>
-                    <Textarea
-                        value={fields.evidence}
-                        onChange={(e) => setFields({ ...fields, evidence: e.target.value })}
-                        placeholder="Links to screenshots, videos, logs..."
-                        className="h-24"
-                    />
-                </div>
-
-                <div className="space-y-2">
-                    <Label>CC</Label>
-                    <Input
-                        value={fields.cc}
-                        onChange={(e) => setFields({ ...fields, cc: e.target.value })}
-                        placeholder="@username"
-                    />
-                </div>
-
-                <div className="flex gap-3 pt-6 mt-6 border-t border-white/20 dark:border-white/10">
-                    <div className="flex-1">
-                        <CopyWithToast text={generateOutput()}/>
-                    </div>
-                    <Button onClick={downloadFile} variant="outline" className="flex-1 h-12">
-                        <Download className="mr-2 h-5 w-5" /> Download
-                    </Button>
-                </div>
+                <ActionBar text={generateOutput()} fileName={'verified-comment.txt'} content={generateOutput()} />
             </CardContent>
         </Card>
     );
