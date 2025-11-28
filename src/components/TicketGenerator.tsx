@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { BugFields, StoryFields, TaskFields, EpicFields, TicketType } from '../types';
 import { Button } from './ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from './ui/card';
+import { Card, CardContent, CardHeader, } from './ui/card';
 import {Form} from "react-bootstrap";
 import FormField from "./ui/formField.tsx";
 import ActionBar from "./ui/actionBar.tsx";
@@ -187,8 +187,6 @@ ${epicFields.scope}`;
     return (
         <Card className="w-full">
             <CardHeader>
-                <CardTitle>Ticket Template Generator</CardTitle>
-                <CardDescription>Generate standardized Jira tickets.</CardDescription>
                 <div className="flex flex-wrap gap-3 mt-6">
                     {(['bug', 'story', 'task', 'epic'] as TicketType[]).map((type) => (
                         <Button

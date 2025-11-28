@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import type {VerifiedCommentFields} from '../types';
 import { Button } from './ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from './ui/card';
+import { Card, CardContent, CardHeader } from './ui/card';
 import {Save, TimerResetIcon} from 'lucide-react';
 import ActionBar from "./ui/actionBar.tsx";
 import FormField from "./ui/formField.tsx";
@@ -120,8 +120,6 @@ ${fields.evidence}
     return (
         <Card className="w-full">
             <CardHeader>
-                <CardTitle>Verified Comment Generator</CardTitle>
-                <CardDescription className="text-base">Generate standardized verification comments for Jira tickets.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
                 <Form>
