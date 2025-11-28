@@ -39,16 +39,6 @@ function App() {
         : ' bg-white/20 hover:bg-white/30 text-white border border-white/30 backdrop-blur-xl'
   }
 
-  function setHeader(view: ActiveView) {
-    return ['ticket'].includes(view.toLowerCase()) ? 'Ticket Templates' : 'Verified Comment Generator'
-  }
-
-  function setSubHeader(view: ActiveView) {
-    return ['ticket'].includes(view.toLowerCase())
-        ? 'Generate standardized descriptions for Bugs, Stories, Tasks, and Epics.'
-        : 'Create consistent verification reports for your QA process.'
-  }
-
   return (
     <div className={`min-h-screen transition-all duration-700 ${darkMode ? 'dark gradient-bg-dark' : 'gradient-bg'} relative px-4 py-6 sm:p-6 md:p-8`}>
       <div className="max-w-7xl mx-auto space-y-6 md:space-y-8">
@@ -91,16 +81,6 @@ function App() {
             <ClipboardCheck className="h-4 w-4 md:h-5 md:w-5" />
             <span className="font-semibold text-sm md:text-base">Verified Comment</span>
           </Button>
-        </div>
-
-        {/* Page Title */}
-        <div className="space-y-2 md:space-y-3">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold tracking-tight text-white">
-            {setHeader(activeView)}
-          </h2>
-          <p className="text-white/90 text-base md:text-lg font-normal tracking-tight">
-            {setSubHeader(activeView)}
-          </p>
         </div>
 
         {/* Content */}
