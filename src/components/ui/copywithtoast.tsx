@@ -1,9 +1,10 @@
-import { useState } from 'react';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { Row, Col, Toast } from 'react-bootstrap';
-import { Button } from "./button";
+import {useState} from 'react';
+import {CopyToClipboard} from 'react-copy-to-clipboard';
+import {Row, Col, Toast} from 'react-bootstrap';
+import {Button} from "./button";
+import {Notebook} from "lucide-react";
 
-const CopyWithToast = ({ text, className }:{ text: string, className?: string}) => {
+const CopyWithToast = ({text, className}: { text: string, className?: string }) => {
     const [show, setShow] = useState(false);
 
     const handleCopy = () => {
@@ -13,7 +14,9 @@ const CopyWithToast = ({ text, className }:{ text: string, className?: string}) 
     return (
         <div>
             <CopyToClipboard text={text}>
-                <Button onClick={handleCopy} disabled={!text} className={`w-full h-12 ${className}`}>
+                <Button size="icon" variant="outline" onClick={handleCopy} disabled={!text}
+                        className={`w-full h-12 ${className}`}>
+                    <Notebook className="ml-2 h-4 w-4 m-1"/>
                     Copy to clipboard
                 </Button>
             </CopyToClipboard>

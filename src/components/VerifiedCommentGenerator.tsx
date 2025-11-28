@@ -2,7 +2,7 @@ import {useState} from 'react';
 import type {VerifiedCommentFields} from '../types';
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from './ui/card';
-import { Save } from 'lucide-react';
+import {Save, TimerResetIcon} from 'lucide-react';
 import ActionBar from "./ui/actionBar.tsx";
 import FormField from "./ui/formField.tsx";
 import {Form} from "react-bootstrap";
@@ -71,6 +71,18 @@ export function VerifiedCommentGenerator() {
         // Could add toast here
     };
 
+    const resetPresets = () => {
+        const presets = {
+            environment: '',
+            platform: '',
+            buildVersion: '',
+            testAccounts: '',
+        };
+        localStorage.setItem('jira-verified-comment-presets', JSON.stringify(presets));
+        window.location.reload();
+        // Could add toast here
+    };
+
     const generateOutput = () => {
         return `*Summary:* ${fields.summary}
 
@@ -127,6 +139,9 @@ ${fields.evidence}
                     ))}
                 </Form>
                 <div className="flex justify-end">
+                    <Button variant="ghost" size="sm" onClick={resetPresets} title="Reset Environment, Platform, Build, Accounts as default">
+                        <TimerResetIcon className="mr-2 h-4 w-4" /> Reset Presets
+                    </Button>
                     <Button variant="ghost" size="sm" onClick={savePresets} title="Save Environment, Platform, Build, Accounts as default">
                         <Save className="mr-2 h-4 w-4" /> Save Presets
                     </Button>

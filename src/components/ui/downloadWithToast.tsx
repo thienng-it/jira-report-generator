@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Row, Col, Toast } from "react-bootstrap";
 import { Button } from "./button";
 import {downloadTextFile} from "../../lib/utils.ts";
+import {DownloadIcon} from "lucide-react";
 
 interface DownloadWithToastProps {
     filename: string;
@@ -27,7 +28,7 @@ const DownloadWithToast = ({ filename, content, className }: DownloadWithToastPr
                 className={`w-full h-12 ${className}`}
                 variant="outline"
             >
-                Download
+                <DownloadIcon className="ml-2 h-4 w-4 m-1"/> Download
             </Button>
 
             <Row>
