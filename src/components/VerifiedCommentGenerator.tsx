@@ -122,6 +122,7 @@ ${fields.evidence}
                             value={fields[field['id'] as keyof VerifiedCommentFields]}
                             onChange={(v) => setFields({ ...fields, [field.id]: v })}
                             options={field.options}
+                            placeholder={field.placeholder}
                         />
                     ))}
                 </Form>
