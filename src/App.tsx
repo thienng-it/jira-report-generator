@@ -3,6 +3,7 @@ import { TicketGenerator } from './components/TicketGenerator';
 import { VerifiedCommentGenerator } from './components/VerifiedCommentGenerator';
 import { FileText, ClipboardCheck, Moon, Sun } from 'lucide-react';
 import { Button } from './components/ui/button';
+import BackToTop from "./components/ui/backToTop.tsx";
 
 function App() {
   const [activeView, setActiveView] = useState<'ticket' | 'comment'>('ticket');
@@ -86,6 +87,9 @@ function App() {
 
         {/* Content */}
         {activeView === 'ticket' ? <TicketGenerator /> : <VerifiedCommentGenerator />}
+
+        {/* Back to top when content is long */}
+        <BackToTop></BackToTop>
 
         {/* Footer */}
         <footer className="pt-8 md:pt-12 text-center text-xs md:text-sm text-white/60 font-normal">
