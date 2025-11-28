@@ -40,11 +40,11 @@ function App() {
   }
 
   function setHeader(view: ActiveView) {
-    return ['ticket', 'comment'].includes(view.toLowerCase()) ? 'Ticket Templates' : 'Verified Comment Generator'
+    return ['ticket'].includes(view.toLowerCase()) ? 'Ticket Templates' : 'Verified Comment Generator'
   }
 
   function setSubHeader(view: ActiveView) {
-    return ['ticket', 'comment'].includes(view.toLowerCase())
+    return ['ticket'].includes(view.toLowerCase())
         ? 'Generate standardized descriptions for Bugs, Stories, Tasks, and Epics.'
         : 'Create consistent verification reports for your QA process.'
   }
