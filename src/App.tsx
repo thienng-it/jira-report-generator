@@ -7,6 +7,8 @@ import BackToTop from "./components/ui/backToTop.tsx";
 
 type ActiveView = 'ticket' | 'comment';
 
+const commonClasses = 'flex items-center justify-center gap-2 h-11 md:h-12 px-4 md:px-6 rounded-xl transition-all duration-300';
+
 function App() {
   const [activeView, setActiveView] = useState<ActiveView>(() => {
     return (localStorage.getItem('activeView') as ActiveView) || 'ticket';
@@ -26,6 +28,26 @@ function App() {
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
   };
+
+  function setButtonVariant(view: ActiveView) {
+    return ['ticket', 'comment'].includes(view.toLowerCase()) ? 'default' : 'outline'
+  }
+
+  function setButtonClassName(view: ActiveView) {
+    return commonClasses + ['ticket', 'comment'].includes(view.toLowerCase())
+        ? ' bg-white/35 hover:bg-white/45 text-white shadow-lg backdrop-blur-xl border border-white/40'
+        : ' bg-white/20 hover:bg-white/30 text-white border border-white/30 backdrop-blur-xl'
+  }
+
+  function setHeader(view: ActiveView) {
+    return ['ticket', 'comment'].includes(view.toLowerCase()) ? 'Ticket Templates' : 'Verified Comment Generator'
+  }
+
+  function setSubHeader(view: ActiveView) {
+    return ['ticket', 'comment'].includes(view.toLowerCase())
+        ? 'Generate standardized descriptions for Bugs, Stories, Tasks, and Epics.'
+        : 'Create consistent verification reports for your QA process.'
+  }
 
   return (
     <div className={`min-h-screen transition-all duration-700 ${darkMode ? 'dark gradient-bg-dark' : 'gradient-bg'} relative px-4 py-6 sm:p-6 md:p-8`}>
@@ -54,24 +76,16 @@ function App() {
         {/* Tab Navigation */}
         <div className="flex flex-col sm:flex-row gap-2 md:gap-3">
           <Button
-            variant={activeView === 'ticket' ? 'default' : 'outline'}
-            className={`flex items-center justify-center gap-2 h-11 md:h-12 px-4 md:px-6 rounded-xl transition-all duration-300 ${
-              activeView === 'ticket'
-                ? 'bg-white/35 hover:bg-white/45 text-white shadow-lg backdrop-blur-xl border border-white/40'
-                : 'bg-white/20 hover:bg-white/30 text-white border border-white/30 backdrop-blur-xl'
-            }`}
+            variant={setButtonVariant(activeView)}
+            className={`${setButtonClassName(activeView)}`}
             onClick={() => setActiveView('ticket')}
           >
             <FileText className="h-4 w-4 md:h-5 md:w-5" />
             <span className="font-semibold text-sm md:text-base">Ticket Templates</span>
           </Button>
           <Button
-            variant={activeView === 'comment' ? 'default' : 'outline'}
-            className={`flex items-center justify-center gap-2 h-11 md:h-12 px-4 md:px-6 rounded-xl transition-all duration-300 ${
-              activeView === 'comment'
-                ? 'bg-white/35 hover:bg-white/45 text-white shadow-lg backdrop-blur-xl border border-white/40'
-                : 'bg-white/20 hover:bg-white/30 text-white border border-white/30 backdrop-blur-xl'
-            }`}
+            variant={setButtonVariant(activeView)}
+            className={`${setButtonClassName(activeView)}`}
             onClick={() => setActiveView('comment')}
           >
             <ClipboardCheck className="h-4 w-4 md:h-5 md:w-5" />
@@ -82,12 +96,10 @@ function App() {
         {/* Page Title */}
         <div className="space-y-2 md:space-y-3">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold tracking-tight text-white">
-            {activeView === 'ticket' ? 'Ticket Templates' : 'Verified Comment Generator'}
+            {setHeader(activeView)}
           </h2>
           <p className="text-white/90 text-base md:text-lg font-normal tracking-tight">
-            {activeView === 'ticket'
-              ? 'Generate standardized descriptions for Bugs, Stories, Tasks, and Epics.'
-              : 'Create consistent verification reports for your QA process.'}
+            {setSubHeader(activeView)}
           </p>
         </div>
 
@@ -99,7 +111,7 @@ function App() {
 
         {/* Footer */}
         <footer className="pt-8 md:pt-12 text-center text-xs md:text-sm text-white/60 font-normal">
-          <p>&copy; {new Date().getFullYear()} Jira Report Generator. Built for QA Excellence.</p>
+          <p>&copy; {new Date().getFullYear()} JIRA Report Generator. Built with ❤️ for QA Excellence from Joseph.</p>
         </footer>
       </div>
     </div>
